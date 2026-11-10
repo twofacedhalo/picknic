@@ -9,7 +9,7 @@ import httpx
 from .base import PriceRecord, RetailerAdapter
 
 BASE = "https://api.kroger.com/v1"
-SIZE_RE = re.compile(r"(\\d+(?:\\.\\d+)?)\\s*(fl\\s*oz|ounces?|oz|lbs?|pounds?|kg|grams?|gallons?|gal|liters?|litres?|l|count|ct|pk)\\b", re.I)
+SIZE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(fl\s*oz|ounces?|oz|lbs?|pounds?|kg|grams?|gallons?|gal|liters?|litres?|l|count|ct|pk)\b", re.I)
 UNIT_MAP = {"ounce":"oz","ounces":"oz","oz":"oz","lb":"lb","lbs":"lb","pound":"lb","pounds":"lb","kg":"kg","gram":"g","grams":"g","g":"g","fl oz":"fl oz","gallon":"gal","gallons":"gal","gal":"gal","liter":"l","litre":"l","liters":"l","litres":"l","l":"l","count":"count","ct":"count","pk":"count"}
 _TOKEN = None
 _EXPIRES = 0.0
@@ -24,7 +24,7 @@ def package_size(item):
     match = SIZE_RE.search(size)
     if match:
         quantity = float(match.group(1))
-        unit = UNIT_MAP[re.sub(r"\\s+"," ",match.group(2).lower())]
+        unit = UNIT_MAP[re.sub(r"\s+"," ",match.group(2).lower())]
         if quantity > 0:
             return quantity, unit
     return None
